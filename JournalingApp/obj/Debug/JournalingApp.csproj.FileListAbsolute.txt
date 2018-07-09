@@ -1,0 +1,13 @@
+D:\Workspaces\c#\JournalingApp\JournalingApp\bin\Debug\JournalingApp.exe.config
+D:\Workspaces\c#\JournalingApp\JournalingApp\bin\Debug\JournalingApp.exe
+D:\Workspaces\c#\JournalingApp\JournalingApp\bin\Debug\JournalingApp.pdb
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.Form1.resources
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.Properties.Resources.resources
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.csproj.GenerateResource.cache
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.csproj.CoreCompileInputs.cache
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.exe
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.pdb
+D:\Workspaces\c#\JournalingApp\JournalingApp\obj\Debug\JournalingApp.csproj.CopyComplete
+D:\Workspaces\c#\JournalingApp\JournalingApp\bin\Debug\Newtonsoft.Json.dll
+D:\Workspaces\c#\JournalingApp\JournalingApp\bin\Debug\Newtonsoft.Json.pdb
+D:\Workspaces\c#\JournalingApp\JournalingApp\bin\Debug\Newtonsoft.Json.xml
