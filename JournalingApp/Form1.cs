@@ -112,6 +112,7 @@ namespace JournalingApp
 
         private void button2_Click(object sender, EventArgs e)
         {
+           
             if (LoginSimulation())
             {
                 if (!"".Equals(this.mycookie))
@@ -120,17 +121,17 @@ namespace JournalingApp
                         journalingSubmit())
                     {
                         this.isSubmit = true;
-                        this.label7.Text = "已于"+ DateTime.Now.ToString() + " 手动提交日志";
-                        writeLog(DateTime.Now.ToString() + " 手动提交日志成功");
+                        this.label7.Text = "已于"+ DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志";
+                        writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志成功");
                     }
                     else
                     {
-                        writeLog(DateTime.Now.ToString() + " 手动提交日志失败");
+                        writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志失败");
                     }
                 }
             }
             else {
-                writeLog(DateTime.Now.ToString() + " 登陆失败");
+                writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 登陆失败");
             }
             
            
@@ -138,9 +139,8 @@ namespace JournalingApp
 
         private void submitJournalingByTime(object sender, EventArgs e)
         {
-            string nowTimes = DateTime.Now.ToString().Split(' ')[1];
-            string nowTime = nowTimes.Split(':')[0] + ":" + nowTimes.Split(':')[1];
-            if (nowTime.Equals("0:0")) {
+           
+            if (DateTime.Now.ToString("HH:mm").Equals("00:00")) {
                 this.isSubmit = false;
                 this.submitTime = "";
                 this.time = "";
@@ -164,22 +164,15 @@ namespace JournalingApp
                         }
                         int second = 0;
                         string tempStr = string.Format("{0}:{1}:{2}", hour, minute, second);
-                        //tempStr = "11:39:0";
                         DateTime rTime = Convert.ToDateTime(tempStr);
-                        this.label7.Text = "将在" + rTime.ToString() + "自动提交日志";
-                        this.submitTime = rTime.ToString();
+                        this.label7.Text = "将在" + rTime.ToString("yyyy-MM-dd HH:mm:ss") + "自动提交日志";
+                        this.submitTime = rTime.ToString("yyyy-MM-dd HH:mm:ss");
+                        this.time = rTime.ToString("HH:mm");
                     }
                     else
                     {
-                        if (this.time.Equals(""))
-                        {
-                            string times = this.submitTime.Split(' ')[1];
-                            string time = times.Split(':')[0] + ":" + times.Split(':')[1];
-                            this.time = time;
-                        }
 
-                        
-                        if (this.time.Equals(nowTime))
+                        if (this.time.Equals(DateTime.Now.ToString("HH:mm")))
                         {
                             //提交日志
                             this.timer.Stop();
@@ -194,23 +187,23 @@ namespace JournalingApp
                                             journalingSubmit())
                                         {
                                             this.isSubmit = true;
-                                            this.label7.Text = "已于" + DateTime.Now.ToString() + " 自动提交日志";
-                                            writeLog(DateTime.Now.ToString() + " 自动提交日志成功");
+                                            this.label7.Text = "已于" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 自动提交日志";
+                                            writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 自动提交日志成功");
                                         }
                                         else
                                         {
-                                            writeLog(DateTime.Now.ToString() + " 自动提交日志失败");
+                                            writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 自动提交日志失败");
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    writeLog(DateTime.Now.ToString() + " 登陆失败");
+                                    writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 登陆失败");
                                 }
                             }
                             catch (Exception ex)
                             {
-                                writeLog(DateTime.Now.ToString() + " 自动提交日志失败："+ex.Message);
+                                writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 自动提交日志失败："+ex.Message);
                             }
                             finally
                             {
