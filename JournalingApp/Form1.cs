@@ -118,11 +118,22 @@ namespace JournalingApp
                 if (!"".Equals(this.mycookie))
                 {
                     if (//true)
-                        journalingSubmit())
+                        journalingSubmit(true))
                     {
-                        this.isSubmit = true;
-                        this.label7.Text = "已于"+ DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志";
-                        writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志成功");
+                        
+                        if (DateTime.Now.ToString("yyyy-MM-dd").Equals(this.dateTimePicker1.Value.ToString("yyyy-MM-dd")))
+                        {
+                            this.label7.Text = "已于" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志";
+                            writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动提交日志成功");
+                            this.isSubmit = true;
+                        }
+                        else {//补录日志
+                            this.label7.Text = "已于" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动补录"+ this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + "日志";
+                            writeLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 手动补录" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + "日志成功");
+                            this.isSubmit = false;
+                            this.submitTime = "";
+                            this.time = "";
+                        }
                     }
                     else
                     {
@@ -184,7 +195,7 @@ namespace JournalingApp
                                     if (!"".Equals(this.mycookie))
                                     {
                                         if (//true)
-                                            journalingSubmit())
+                                            journalingSubmit(false))
                                         {
                                             this.isSubmit = true;
                                             this.label7.Text = "已于" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " 自动提交日志";
@@ -280,7 +291,7 @@ namespace JournalingApp
           
         }
 
-        private bool journalingSubmit()
+        private bool journalingSubmit(bool isButtonClick)
         {
             string contentUrl = "http://pro.bsoft.com.cn/platform/*.jsonRequest";
             HttpWebRequest reqContent = (HttpWebRequest)WebRequest.Create(contentUrl);
@@ -288,6 +299,11 @@ namespace JournalingApp
             reqContent.AllowAutoRedirect = false;//服务端重定向。一般设置false
             reqContent.ContentType = "application/json";//数据一般设置这个值，除非是文件上传
             string postData1 = "{\"serviceId\":\"SupportWorkLogService\",\"method\":\"execute\",\"body\":{\"gsxm\":\"" + this.comboBox1.SelectedValue + "\",\"gzrz\":\"" + this.richTextBox1.Text + "\",\"rzqk\":\"1\",\"zfid\":\"\",\"id\":\"\",\"kqid\":\"\",\"xmlb\":\"" + this.xmlb + "\",\"xmbm\":\"" + this.xmbm + "\",\"ccbz\":0,\"blbz\":0,\"xmmc\":\"" + this.comboBox1.SelectedText + "\",\"projectid\":\"" + this.comboBox1.SelectedValue + "\",\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"},\"TaskLog\":{\"zcdh\":\"" + this.zcdh + "\",\"rzid\":\"\",\"zcry\":\"" + this.textBox1.Text + "\",\"cpmk\":\"" + (this.checkBox1.Checked ? this.cpmk : "") + "\",\"mkmc\":\"" + (this.checkBox1.Checked ? this.mkmc : "") + "\",\"nrid\":\"2139\",\"blbz\":0,\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"}}";
+            //如果是补录日志
+            if (isButtonClick && !DateTime.Now.ToString("yyyy-MM-dd").Equals(this.dateTimePicker1.Value.ToString("yyyy-MM-dd")))
+            {
+                postData1 = "{\"serviceId\":\"SupportWorkLogService\",\"method\":\"execute\",\"body\":{\"gsxm\":\"" + this.comboBox1.SelectedValue + "\",\"gzrz\":\"" + this.richTextBox1.Text + "\",\"rzqk\":\"1\",\"zfid\":\"\",\"id\":\"\",\"kqid\":\"\",\"xmlb\":\"" + this.xmlb + "\",\"xmbm\":\"" + this.xmbm + "\",\"ccbz\":0,\"blbz\":1,\"blrq\":\""+ this.dateTimePicker1.Value.ToString("yyyy-MM-ddT00:00:00") + "\",\"xmmc\":\"" + this.comboBox1.SelectedText + "\",\"projectid\":\"" + this.comboBox1.SelectedValue + "\",\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"},\"TaskLog\":{\"zcdh\":\"" + this.zcdh + "\",\"rzid\":\"\",\"zcry\":\"" + this.textBox1.Text + "\",\"cpmk\":\"" + (this.checkBox1.Checked ? this.cpmk : "") + "\",\"mkmc\":\"" + (this.checkBox1.Checked ? this.mkmc : "") + "\",\"nrid\":\"2139\",\"blbz\":1,\"blrq\":\"" + this.dateTimePicker1.Value.ToString("yyyy-MM-ddT00:00:00") + "\",\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"}}";
+            }
             byte[] postBytes1 = Encoding.UTF8.GetBytes(postData1);
             reqContent.CookieContainer = new CookieContainer();
             reqContent.CookieContainer.SetCookies(reqContent.RequestUri, this.mycookie);//将登录的cookie值赋予此次的请求。
