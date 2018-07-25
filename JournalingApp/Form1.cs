@@ -113,7 +113,7 @@ namespace JournalingApp
 
         private void button2_Click(object sender, EventArgs e)
         {
-           
+            
             if (LoginSimulation())
             {
                 if (!"".Equals(this.mycookie))
@@ -156,6 +156,7 @@ namespace JournalingApp
                 this.isSubmit = false;
                 this.submitTime = "";
                 this.time = "";
+                this.dateTimePicker1.Value = DateTime.Now;
             }
             if (!this.isSubmit) {
                 if (//true)
