@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -235,8 +236,8 @@ namespace JournalingApp
         private bool LoginSimulation()
         {
 
-            string url = "http://pro.bsoft.com.cn/platform/logon/myRoles";
-            string postData = "{\"pwd\":\""+this.textBox2.Text+ "\",\"uid\":\""+this.textBox1.Text+"\",\"url\":\"logon/myRoles\"}";
+            string url = "https://pro.bsoft.com.cn/platform/logon/myRoles";
+            string postData = "{\"pwd\":\"" + this.textBox2.Text + "\",\"uid\":\"" + this.textBox1.Text + "\",\"url\":\"logon/myRoles\"}";
 
             ////1.获取登录Cookie
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
@@ -249,15 +250,26 @@ namespace JournalingApp
             Stream postDataStream = req.GetRequestStream();
             postDataStream.Write(postBytes, 0, postBytes.Length);
             postDataStream.Close();
-            
+
             HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+            Stream responseStream = responseStream = resp.GetResponseStream();
+            if (resp.ContentEncoding.ToLower().Contains("gzip"))
+                responseStream = new GZipStream(responseStream, CompressionMode.Decompress);
+            else if (resp.ContentEncoding.ToLower().Contains("deflate"))
+                responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
+
+            StreamReader Reader = new StreamReader(responseStream, Encoding.Default);
+
+            string Html = Reader.ReadToEnd();
+
             string cookies = resp.Headers.Get("Set-Cookie");//获取登录后的cookie值。
             string cookie = cookies.Split(';')[0];
             this.label7.Text = "获取cookie:"+cookie;
-            string html = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-            JObject o = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(html);
+
+            JObject o = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(Html);
             string c = o["body"]["tokens"][0]["id"].ToString();
-            string contentUrl2 = "http://pro.bsoft.com.cn/platform/logon/myApps?urt="+ c + "&deep=3";
+            string contentUrl2 = "https://pro.bsoft.com.cn/platform/logon/myApps?urt="+ c + "&deep=3";
             HttpWebRequest reqContent2 = (HttpWebRequest)WebRequest.Create(contentUrl2);
             //reqContent2.Method = "GET";
             reqContent2.MediaType = "GET";
@@ -293,7 +305,7 @@ namespace JournalingApp
 
         private bool journalingSubmit(bool isButtonClick)
         {
-            string contentUrl = "http://pro.bsoft.com.cn/platform/*.jsonRequest";
+            string contentUrl = "https://pro.bsoft.com.cn/platform/*.jsonRequest";
             HttpWebRequest reqContent = (HttpWebRequest)WebRequest.Create(contentUrl);
             reqContent.Method = "POST";
             reqContent.AllowAutoRedirect = false;//服务端重定向。一般设置false
@@ -313,7 +325,16 @@ namespace JournalingApp
             HttpWebResponse resp1 = (HttpWebResponse)reqContent.GetResponse();
 
             string cookies1 = resp1.Headers.Get("Set-Cookie");
-            JObject o = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(new StreamReader(resp1.GetResponseStream()).ReadToEnd());
+            Stream responseStream = responseStream = resp1.GetResponseStream();
+            if (resp1.ContentEncoding.ToLower().Contains("gzip"))
+                responseStream = new GZipStream(responseStream, CompressionMode.Decompress);
+            else if (resp1.ContentEncoding.ToLower().Contains("deflate"))
+                responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
+
+            StreamReader Reader = new StreamReader(responseStream, Encoding.Default);
+
+            string Html = Reader.ReadToEnd();
+            JObject o = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(Html);
             if (o["code"].ToString().Equals("200"))
             {
                 return true;
