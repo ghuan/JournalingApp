@@ -42,7 +42,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -110,7 +109,6 @@
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.textBox3);
             this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Location = new System.Drawing.Point(249, 32);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(335, 81);
@@ -121,7 +119,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(114, 53);
+            this.label5.Location = new System.Drawing.Point(13, 52);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 12);
             this.label5.TabIndex = 6;
@@ -130,26 +128,27 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(169, 50);
+            this.comboBox1.Location = new System.Drawing.Point(68, 49);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(146, 20);
+            this.comboBox1.Size = new System.Drawing.Size(247, 20);
             this.comboBox1.TabIndex = 5;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(18, 51);
+            this.checkBox2.Location = new System.Drawing.Point(143, 24);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(72, 16);
             this.checkBox2.TabIndex = 4;
             this.checkBox2.Text = "是否出差";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(230, 28);
+            this.label4.Location = new System.Drawing.Point(126, 26);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(11, 12);
             this.label4.TabIndex = 3;
@@ -157,7 +156,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(170, 22);
+            this.textBox3.Location = new System.Drawing.Point(68, 20);
             this.textBox3.Name = "textBox3";
             this.textBox3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.textBox3.Size = new System.Drawing.Size(56, 21);
@@ -167,24 +166,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(139, 25);
+            this.label3.Location = new System.Drawing.Point(37, 23);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 12);
             this.label3.TabIndex = 1;
             this.label3.Text = "工时:";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(18, 24);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(96, 16);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "全科基层医疗";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // groupBox3
             // 
@@ -290,7 +276,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
@@ -305,9 +290,7 @@
         private string mycookie="";
         private string xmbm="";
         private string xmlb = "";
-        private string zcdh = "";
-        private string cpmk = "";
-        private string mkmc = "";
+        
     }
 }
 

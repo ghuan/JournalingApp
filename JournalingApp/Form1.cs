@@ -55,7 +55,6 @@ namespace JournalingApp
             Dictionary<string, string> dict = this.ReadLineFile();
             this.textBox1.Text = dict["uid"];
             this.textBox2.Text = dict["pwd"];
-            this.checkBox1.Checked = "true".Equals(dict["qkjcyl"]) ? true : false;
             this.checkBox2.Checked = "true".Equals(dict["outwork"]) ? true : false;
             this.textBox3.Text = dict["worktime"];
             this.richTextBox1.Text = dict["worktext"];
@@ -71,7 +70,6 @@ namespace JournalingApp
 
             this.xmbm = dict["xmbm"];
             this.xmlb = dict["xmlb"];
-            this.zcdh = dict["zcdh"];
 
             
 
@@ -189,7 +187,7 @@ namespace JournalingApp
                         {
                             //提交日志
                             this.timer.Stop();
-                            this.setFocus();
+                           // this.setFocus();
                             try
                             {
                                 if (LoginSimulation())
@@ -237,15 +235,16 @@ namespace JournalingApp
         private bool LoginSimulation()
         {
 
-            string url = "https://pro.bsoft.com.cn/platform/logon/myRoles";
+            string url = "https://web.bsoft.com.cn/portal/logon/myRoles";
             string postData = "{\"pwd\":\"" + this.textBox2.Text + "\",\"uid\":\"" + this.textBox1.Text + "\",\"url\":\"logon/myRoles\"}";
 
             ////1.获取登录Cookie
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "POST";// POST OR GET， 如果是GET, 则没有第二步传参，直接第三步，获取服务端返回的数据
             req.AllowAutoRedirect = false;//服务端重定向。一般设置false
-            req.ContentType = "application/x-www-form-urlencoded";//数据一般设置这个值，除非是文件上传
-
+            req.ContentType = "application/json";//数据一般设置这个值，除非是文件上传
+            req.Headers.Add("encoding", "utf-8");
+            req.Headers.Add("Accept-Language", "zh-CN,zh;q=0.9");
             byte[] postBytes = Encoding.UTF8.GetBytes(postData);
             req.ContentLength = postBytes.Length;
             Stream postDataStream = req.GetRequestStream();
@@ -260,7 +259,7 @@ namespace JournalingApp
             else if (resp.ContentEncoding.ToLower().Contains("deflate"))
                 responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
 
-            StreamReader Reader = new StreamReader(responseStream, Encoding.Default);
+            StreamReader Reader = new StreamReader(responseStream);
 
             string Html = Reader.ReadToEnd();
 
@@ -269,20 +268,20 @@ namespace JournalingApp
             this.label7.Text = "获取cookie:"+cookie;
 
             JObject o = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(Html);
-            string c = o["body"]["tokens"][0]["id"].ToString();
-            string contentUrl2 = "https://pro.bsoft.com.cn/platform/logon/myApps?urt="+ c + "&deep=3";
+            string c = o["body"][0]["id"].ToString();
+            string contentUrl2 = "https://web.bsoft.com.cn/portal/logon/myApps?urt=" + c + "&deep=3";
             HttpWebRequest reqContent2 = (HttpWebRequest)WebRequest.Create(contentUrl2);
             //reqContent2.Method = "GET";
             reqContent2.MediaType = "GET";
             reqContent2.AllowAutoRedirect = false;//服务端重定向。一般设置false
             reqContent2.ContentType = "application/json";//数据一般设置这个值，除非是文件上传
             reqContent2.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-            reqContent2.Host = "pro.bsoft.com.cn";
+            reqContent2.Host = "web.bsoft.com.cn";
             reqContent2.KeepAlive = true;
             reqContent2.Headers.Add("Accept-Encoding", "gzip, deflate");
             reqContent2.Headers.Add("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
             reqContent2.Headers.Add("encoding", "utf-8");
-            reqContent2.Referer = "http://pro.bsoft.com.cn/platform/index.html";
+            reqContent2.Referer = "https://web.bsoft.com.cn/";
             reqContent2.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0";
             reqContent2.Credentials = CredentialCache.DefaultCredentials;
             reqContent2.CookieContainer = new CookieContainer();
@@ -306,16 +305,18 @@ namespace JournalingApp
 
         private bool journalingSubmit(bool isButtonClick)
         {
-            string contentUrl = "https://pro.bsoft.com.cn/platform/*.jsonRequest";
+            string contentUrl = "https://web.bsoft.com.cn/portal/*.jsonRequest";
             HttpWebRequest reqContent = (HttpWebRequest)WebRequest.Create(contentUrl);
             reqContent.Method = "POST";
             reqContent.AllowAutoRedirect = false;//服务端重定向。一般设置false
             reqContent.ContentType = "application/json";//数据一般设置这个值，除非是文件上传
-            string postData1 = "{\"serviceId\":\"SupportWorkLogService\",\"method\":\"execute\",\"body\":{\"gsxm\":\"" + this.comboBox1.SelectedValue + "\",\"gzrz\":\"" + this.richTextBox1.Text + "\",\"rzqk\":\"1\",\"zfid\":\"\",\"id\":\"\",\"kqid\":\"\",\"xmlb\":\"" + this.xmlb + "\",\"xmbm\":\"" + this.xmbm + "\",\"ccbz\":0,\"blbz\":0,\"xmmc\":\"" + this.comboBox1.SelectedText + "\",\"projectid\":\"" + this.comboBox1.SelectedValue + "\",\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"},\"TaskLog\":{\"zcdh\":\"" + this.zcdh + "\",\"rzid\":\"\",\"zcry\":\"" + this.textBox1.Text + "\",\"cpmk\":\"" + (this.checkBox1.Checked ? this.cpmk : "") + "\",\"mkmc\":\"" + (this.checkBox1.Checked ? this.mkmc : "") + "\",\"nrid\":\"2139\",\"blbz\":0,\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"}}";
+            reqContent.Headers.Add("encoding", "utf-8");
+            reqContent.Headers.Add("Accept-Language", "zh-CN,zh;q=0.9");
+            string postData1 = "{\"schema\":\"portal.main.entry.T_KQB\",\"serviceId\":\"portal.CheckWorkService\",\"method\":\"saveKqb\",\"body\":[{\"yggh\":\""+ this.textBox1.Text + "\",\"gzrz\":\"\",\"flag\":5,\"housename\":\"\",\"rzqk\":\"1\",\"zfid\":\"\",\"kqrq\":\""+ this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + "\",\"ccbz\":"+ (this.checkBox2.Checked ? 1 : 0) + "},{\"gzrz\":\""+ this.richTextBox1.Text + "\",\"gsxm\":\""+ this.comboBox1.SelectedValue + "\",\"gzsj\":"+ this.textBox3.Text + ",\"id\":\"\",\"xmbl\":\"0\",\"xmbm\":\""+ this.xmbm + "\",\"xmlb\":\""+this.xmlb+"\",\"flag\":5},1]}";
             //如果是补录日志
             if (isButtonClick && !DateTime.Now.ToString("yyyy-MM-dd").Equals(this.dateTimePicker1.Value.ToString("yyyy-MM-dd")))
             {
-                postData1 = "{\"serviceId\":\"SupportWorkLogService\",\"method\":\"execute\",\"body\":{\"gsxm\":\"" + this.comboBox1.SelectedValue + "\",\"gzrz\":\"" + this.richTextBox1.Text + "\",\"rzqk\":\"1\",\"zfid\":\"\",\"id\":\"\",\"kqid\":\"\",\"xmlb\":\"" + this.xmlb + "\",\"xmbm\":\"" + this.xmbm + "\",\"ccbz\":0,\"blbz\":1,\"blrq\":\""+ this.dateTimePicker1.Value.ToString("yyyy-MM-ddT00:00:00") + "\",\"xmmc\":\"" + this.comboBox1.SelectedText + "\",\"projectid\":\"" + this.comboBox1.SelectedValue + "\",\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"},\"TaskLog\":{\"zcdh\":\"" + this.zcdh + "\",\"rzid\":\"\",\"zcry\":\"" + this.textBox1.Text + "\",\"cpmk\":\"" + (this.checkBox1.Checked ? this.cpmk : "") + "\",\"mkmc\":\"" + (this.checkBox1.Checked ? this.mkmc : "") + "\",\"nrid\":\"2139\",\"blbz\":1,\"blrq\":\"" + this.dateTimePicker1.Value.ToString("yyyy-MM-ddT00:00:00") + "\",\"zcgs\":" + this.textBox3.Text + ",\"zcgsmx\":\"" + this.textBox3.Text + ",\"}}";
+                postData1 = "{\"schema\":\"portal.main.entry.T_KQB\",\"serviceId\":\"portal.CheckWorkService\",\"method\":\"saveKqb\",\"body\":[{\"yggh\":\"" + this.textBox1.Text + "\",\"gzrz\":\"\",\"flag\":5,\"housename\":\"\",\"rzqk\":\"1\",\"zfid\":\"\",\"kqrq\":\"" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + "\",\"ccbz\":" + (this.checkBox2.Checked ? 1 : 0) + "},{\"gzrz\":\"" + this.richTextBox1.Text + "\",\"gsxm\":\"" + this.comboBox1.SelectedValue + "\",\"gzsj\":" + this.textBox3.Text + ",\"id\":\"\",\"xmbl\":\"0\",\"xmbm\":\"" + this.xmbm + "\",\"xmlb\":\"" + this.xmlb + "\",\"flag\":5},2]}";
             }
             byte[] postBytes1 = Encoding.UTF8.GetBytes(postData1);
             reqContent.CookieContainer = new CookieContainer();
@@ -332,7 +333,7 @@ namespace JournalingApp
             else if (resp1.ContentEncoding.ToLower().Contains("deflate"))
                 responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
 
-            StreamReader Reader = new StreamReader(responseStream, Encoding.Default);
+            StreamReader Reader = new StreamReader(responseStream);
 
             string Html = Reader.ReadToEnd();
             JObject o = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(Html);
@@ -451,6 +452,9 @@ namespace JournalingApp
 
         }
 
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }

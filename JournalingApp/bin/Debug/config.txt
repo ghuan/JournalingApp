@@ -1,13 +1,9 @@
-uid=6843
-pwd=3pu6fk
-qkjcyl=true
-cpmk=109202
-mkmc=基层全科诊疗
+uid=4643
+pwd=8bc72ba55c88f35b9be9cf366cee4357
 worktime=8
 outwork=false
-worktext=需求修改
+worktext=江干日常问题处理
 xmbm=12103
-xmlb=11
-zcdh=20180600041
+xmlb=1
 projectid=29793
 projectname=杭州市江干区卫生和计划生育委员会(卫生局)2015-1745
